@@ -22,3 +22,17 @@ func AvgTemperature(s Station) float64 {
 	total = total / float64(len(s.Observation))
 	return total
 }
+
+func MaxWindGust(stations []Station) (Station, float64) {
+	maxstation := Station{}
+	maxspeedwind := 0.0
+	for _, s := range stations {
+		for _, o := range s.Observation {
+			if maxspeedwind < o.Wind.Speed {
+				maxspeedwind = o.Wind.Speed
+				maxstation = s
+			}
+		}
+	}
+	return maxstation, maxspeedwind
+}

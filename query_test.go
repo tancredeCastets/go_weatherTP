@@ -25,3 +25,15 @@ func TestAvgTemperatureXML(t *testing.T) {
 	avg := AvgTemperature(stations[4])
 	t.Logf("avg temp station XML: %.2f", avg)
 }
+
+func TestMaxWindGustJSON(t *testing.T) {
+	stations, _ := LoadFromJSON("weather_data.json")
+	station, speed := MaxWindGust(stations)
+	t.Logf("station: %s, vitesse max: %.2f", station.Name, speed)
+}
+
+func TestMaxWindGustXML(t *testing.T) {
+	stations, _ := LoadFromXML("weather_data.xml")
+	station, speed := MaxWindGust(stations)
+	t.Logf("station: %s, vitesse max: %.2f", station.Name, speed)
+}
