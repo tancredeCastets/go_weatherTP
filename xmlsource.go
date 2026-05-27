@@ -3,6 +3,7 @@ package weather
 import (
 	"encoding/xml"
 	"os"
+	"strconv"
 	"time"
 )
 
@@ -16,43 +17,50 @@ type stationXML struct {
 	Name     string   `xml:"name"`
 	Country  string   `xml:"country,attr"`
 	Location struct {
-		Latitude  float64 `xml:"latitude,attr"`
-		Longitude float64 `xml:"longitude,attr"`
-	}
-	Altitude    int              `xml:"altitude,attr"`
-	Device      deviceXML        `xml:"device"`
-	Observation []observationXML `xml:"observations"`
+		Latitude  float64 `xml:"lat,attr"`
+		Longitude float64 `xml:"lon,attr"`
+		Altitude  int     `xml:"altitude,attr"`
+	} `xml:"coordinates"`
+	Device struct {
+		Type string `xml:"model,attr"`
+	} `xml:"hardware"`
+	Observations struct {
+		Items []observationXML `xml:"observation"`
+	} `xml:"observations"`
 }
-
-type deviceXML struct {
-	Type string `xml:"type,attr"`
-}
-
 type observationXML struct {
-	Timestamp   time.Time `xml:"timestamp"`
-	Temperature float64   `xml:"temperature_celsius,attr"` // celsius
-	Conditions  string    `xml:"conditions,attr"`
-	Wind        windXML   `xml:"wind"`
+	XMLName     xml.Name     `xml:"observation"`
+	Timestamp   time.Time    `xml:"at,attr"`
+	Measures    []measureXML `xml:"measure"`
+	Temperature float64      `xml:"temperature_celsius,attr"` // celsius
+	Conditions  string       `xml:"sky,attr"`
+	Note        *string      `xml:"note"`
+	Wind        struct {
+		XMLName   xml.Name `xml:"wind"`
+		Speed     float64  `xml:"speed,attr"`     // km/h
+		Direction int      `xml:"direction,attr"` // Degrees
+	}
 }
-type windXML struct {
-	Speed     float64 `xml:"speed_kmh,attr"`     // km/h
-	Direction int     `xml:"direction_deg,attr"` // Degrees
+
+type measureXML struct {
+	Type  string `xml:"type,attr"`
+	Value string `xml:",chardata"`
 }
 
 func toStationXML(S stationXML) Station {
 	obs := make([]Observation, 0)
-	for _, o := range S.Observation {
+	for _, o := range S.Observations.Items {
 		obs = append(obs, toObservationXML(o))
 	}
 	return Station{
 		ID:      S.ID,
 		Name:    S.Name,
-		Country: countryISO[S.Country],
+		Country: S.Country,
 		Location: Location{
 			Latitude:  S.Location.Latitude,
 			Longitude: S.Location.Longitude,
 		},
-		Altitude: S.Altitude,
+		Altitude: S.Location.Altitude,
 		Device: Device{
 			Type: S.Device.Type,
 		},
@@ -61,10 +69,18 @@ func toStationXML(S stationXML) Station {
 
 }
 func toObservationXML(O observationXML) Observation {
+	var temp float64
+	for _, m := range O.Measures {
+		switch m.Type {
+		case "temperature":
+			temp, _ = strconv.ParseFloat(m.Value, 64)
+		}
+	}
 	return Observation{
 		Timestamp:   O.Timestamp,
-		Temperature: O.Temperature,
+		Temperature: temp,
 		Conditions:  O.Conditions,
+		Notes:       O.Note,
 		Wind: Wind{
 			Speed:     O.Wind.Speed,
 			Direction: O.Wind.Direction,

@@ -28,6 +28,7 @@ type Observation struct {
 	Timestamp   time.Time
 	Temperature float64 // celcius
 	Conditions  string
+	Notes       *string
 	Wind        Wind
 }
 type Wind struct {

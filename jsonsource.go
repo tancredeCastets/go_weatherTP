@@ -32,6 +32,7 @@ type observationJSON struct {
 	Timestamp   time.Time `json:"timestamp"`
 	Temperature float64   `json:"temperature_celsius"` // celsius
 	Conditions  string    `json:"conditions"`
+	Notes       *string   `json:"notes"`
 	Wind        windJSON  `json:"wind"`
 }
 type windJSON struct {
@@ -84,6 +85,7 @@ func toObservation(O observationJSON) Observation {
 		Timestamp:   O.Timestamp,
 		Temperature: O.Temperature,
 		Conditions:  O.Conditions,
+		Notes:       O.Notes,
 		Wind: Wind{
 			Speed:     O.Wind.Speed,
 			Direction: O.Wind.Direction,
