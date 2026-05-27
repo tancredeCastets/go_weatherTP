@@ -42,20 +42,20 @@ type windJSON struct {
 
 // conversion map
 var countryISO = map[string]string{
-	"France":             "FR",
-	"Italy":              "IT",
-	"Espagne":            "ES",
-	"Allemagne":          "DE",
-	"Portugal":           "PT",
-	"Belgique":           "BE",
-	"Pays-bas":           "NL",
-	"Suisse":             "CH",
-	"Autriche":           "AT",
-	"Pologne":            "PL",
-	"Danemark":           "DK",
-	"Suède":              "SE",
-	"Norvège":            "NO",
-	"République tchèque": "CZ",
+	"France":    "FR",
+	"Italie":    "IT",
+	"Espagne":   "ES",
+	"Allemagne": "DE",
+	"Portugal":  "PT",
+	"Belgique":  "BE",
+	"Pays-bas":  "NL",
+	"Suisse":    "CH",
+	"Autriche":  "AT",
+	"Pologne":   "PL",
+	"Danemark":  "DK",
+	"Suède":     "SE",
+	"Norvège":   "NO",
+	"Tchéquie":  "CZ",
 }
 
 func toStation(S stationJSON) Station {

@@ -37,3 +37,15 @@ func TestMaxWindGustXML(t *testing.T) {
 	station, speed := MaxWindGust(stations)
 	t.Logf("station: %s, vitesse max: %.2f", station.Name, speed)
 }
+
+func TestCountByCountryJSON(t *testing.T) {
+	stations, _ := LoadFromJSON("weather_data.json")
+	result := CountByCountry(stations)
+	t.Logf("stations: %d", len(result))
+}
+
+func TestCountByCountryXML(t *testing.T) {
+	stations, _ := LoadFromXML("weather_data.xml")
+	result := CountByCountry(stations)
+	t.Logf("stations: %d", len(result))
+}

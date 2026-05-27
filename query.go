@@ -36,3 +36,11 @@ func MaxWindGust(stations []Station) (Station, float64) {
 	}
 	return maxstation, maxspeedwind
 }
+
+func CountByCountry(stations []Station) map[string]int {
+	result := make(map[string]int)
+	for _, s := range stations {
+		result[s.Country]++
+	}
+	return result
+}
