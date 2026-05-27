@@ -39,6 +39,58 @@ type windJSON struct {
 	Direction int     `json:"direction_deg"` // Degrees
 }
 
+// conversion map
+var countryISO = map[string]string{
+	"France":             "FR",
+	"Italy":              "IT",
+	"Espagne":            "ES",
+	"Allemagne":          "DE",
+	"Portugal":           "PT",
+	"Belgique":           "BE",
+	"Pays-bas":           "NL",
+	"Suisse":             "CH",
+	"Autriche":           "AT",
+	"Pologne":            "PL",
+	"Danemark":           "DK",
+	"Suède":              "SE",
+	"Norvège":            "NO",
+	"République tchèque": "CZ",
+}
+
+func toStation(S stationJSON) Station {
+	obs := make([]Observation, 0)
+	for _, o := range S.Observation {
+		obs = append(obs, toObservation(o))
+	}
+
+	return Station{
+		ID:      S.ID,
+		Name:    S.Name,
+		Country: countryISO[S.Country],
+		Location: Location{
+			Latitude:  S.Location.Latitude,
+			Longitude: S.Location.Longitude,
+		},
+		Altitude: S.Altitude,
+		Device: Device{
+			Type: S.Device.Type,
+		},
+		Observation: obs,
+	}
+}
+
+func toObservation(O observationJSON) Observation {
+	return Observation{
+		Timestamp:   O.Timestamp,
+		Temperature: O.Temperature,
+		Conditions:  O.Conditions,
+		Wind: Wind{
+			Speed:     O.Wind.Speed,
+			Direction: O.Wind.Direction,
+		},
+	}
+}
+
 func LoadFromJSON(path string) ([]Station, error) {
 
 	f, err := os.ReadFile(path)
@@ -49,6 +101,9 @@ func LoadFromJSON(path string) ([]Station, error) {
 	if err := json.Unmarshal(f, &root); err != nil {
 		return nil, err
 	}
-
-	return nil, nil
+	result := make([]Station, 0)
+	for _, s := range root.StationJSON {
+		result = append(result, toStation(s))
+	}
+	return result, nil
 }
