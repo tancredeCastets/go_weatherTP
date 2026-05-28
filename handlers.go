@@ -23,3 +23,13 @@ func (a *App) ListStations(w http.ResponseWriter, r *http.Request) {
 func NewApp(store *Store) *App {
 	return &App{store: store}
 }
+
+func (a *App) GetStation(w http.ResponseWriter, r *http.Request) {
+	id := r.PathValue("id")
+	st, ok := a.store.Get(id)
+	if !ok {
+		writeError(w, http.StatusNotFound, "station not found")
+	} else {
+		writeJSON(w, http.StatusOK, st)
+	}
+}
