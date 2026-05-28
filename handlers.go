@@ -48,3 +48,21 @@ func (a *App) CreateStation(w http.ResponseWriter, r *http.Request) {
 		writeJSON(w, http.StatusCreated, st)
 	}
 }
+
+func (a *App) UpdateStation(w http.ResponseWriter, r *http.Request) {
+	id := r.PathValue("id")
+	var st Station
+	err := json.NewDecoder(r.Body).Decode(&st)
+	st.ID = id
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "invalid station")
+		return
+	}
+	if a.store.Has(st.ID) {
+		a.store.Put(st)
+		writeJSON(w, http.StatusOK, st)
+	} else {
+		a.store.Put(st)
+		writeJSON(w, http.StatusCreated, st)
+	}
+}
