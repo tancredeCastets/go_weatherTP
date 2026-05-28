@@ -18,7 +18,7 @@ func writeError(w http.ResponseWriter, status int, msg string) {
 }
 
 func (a *App) ListStations(w http.ResponseWriter, r *http.Request) {
-	writeJSON(w, 200, a.store.All())
+	writeJSON(w, http.StatusOK, a.store.All())
 }
 func NewApp(store *Store) *App {
 	return &App{store: store}
