@@ -32,5 +32,6 @@ func main() {
 	mux.HandleFunc("GET /stations/{id}", app.GetStation)
 	mux.HandleFunc("POST /stations", app.CreateStation)
 	mux.HandleFunc("PUT /stations/{id}", app.UpdateStation)
+	mux.HandleFunc("DELETE /stations/{id}", app.DeleteStation)
 	http.ListenAndServe(":8080", mux)
 }

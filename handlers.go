@@ -66,3 +66,14 @@ func (a *App) UpdateStation(w http.ResponseWriter, r *http.Request) {
 		writeJSON(w, http.StatusCreated, st)
 	}
 }
+func (a *App) DeleteStation(w http.ResponseWriter, r *http.Request) {
+	id := r.PathValue("id")
+	st, ok := a.store.Get(id)
+	if !ok {
+		writeError(w, http.StatusNotFound, "station not found")
+		return
+	} else {
+		a.store.Delete(id)
+		writeJSON(w, http.StatusNoContent, st)
+	}
+}
