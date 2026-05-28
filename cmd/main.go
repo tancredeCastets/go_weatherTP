@@ -30,5 +30,6 @@ func main() {
 	})
 	mux.HandleFunc("GET /stations", app.ListStations)
 	mux.HandleFunc("GET /stations/{id}", app.GetStation)
+	mux.HandleFunc("POST /stations", app.CreateStation)
 	http.ListenAndServe(":8080", mux)
 }
