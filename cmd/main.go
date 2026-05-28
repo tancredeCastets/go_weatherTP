@@ -18,11 +18,16 @@ func main() {
 	for _, s := range stations {
 		store.Put(s)
 	}
+
+	app := weather.NewApp(store)
+
 	log.Printf("bootstrap : %d stations chargées", len(stations))
 
 	mux := http.NewServeMux()
+
 	mux.HandleFunc("GET /health", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, "ok")
 	})
+	mux.HandleFunc("GET /stations", app.ListStations)
 	http.ListenAndServe(":8080", mux)
 }
